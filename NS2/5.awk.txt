@@ -1,0 +1,15 @@
+BEGIN {
+pdrop=0;
+}
+{
+event=$1;
+if(event=="d")
+{
+pdrop++;
+}
+
+}
+
+END {
+printf("THE NUMBER OF PACKETS DROPPED ARE %d",&pdrop);
+}

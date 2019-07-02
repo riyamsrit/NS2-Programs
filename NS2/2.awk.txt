@@ -1,0 +1,37 @@
+BEGIN {
+     telnetPackets=0;
+     ftpPackets=0;
+     telnetSize=0;
+     ftpSize=0;
+     TotalTelnet=0;
+     TotalFTP=0;
+     }
+  {
+    event=$1; 
+    pktSize=$6;
+    pktType=$5;
+    fromnode=$9;
+    toNode=$10;
+ 
+   if(event=="r"&& pkttype=="tcp"&& fromnode=="0.0" && toNode=="3.0")
+     {
+       telnetPackets++;
+       telnetSize=pktSize;
+      }
+
+   if(event=="r"&& pkttype=="tcp"&& fromnode=="1.0" && toNode=="3.1")
+     {
+       FtpPackets++;
+       ftpSize=pktSize;
+      }
+}
+
+TotalTelnet=telnetPackets*telnetSize*8;
+TotalFTP=FTPPackets*ftpSize*8;
+printf ("The total throughput of Telnet application is %d bytes per second",TotalTelnet/24);
+printf ("The total throughput of FTP application is %d bytes per second",TotalFTP/24);
+
+
+
+
+

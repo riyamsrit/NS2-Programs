@@ -1,0 +1,14 @@
+BEGIN {
+dcount=0;
+}
+{
+event=$1;
+if (event=="d")
+{
+dcount++;
+}
+}
+END {
+printf("The number of packets dropped are %d",dcount);
+
+}

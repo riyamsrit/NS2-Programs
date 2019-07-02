@@ -1,0 +1,50 @@
+BEGIN {
+TCPSent=0;
+TCPReceived=0;
+TCPLost=0;
+UDPSent=0;
+UDPReceived=0;
+UDPLost=0;
+TotalSent=0;
+TotalReceived=0;
+TotalLost=0;
+      }
+{
+  packetType=$5;
+  event=$1;
+  if(packetType=="tcp")
+    { 
+      if(event=="+")
+      TCPSent++;
+      else
+      if(event=="r")
+      TCPReceived++;
+      else
+      if(event=="d")
+      TCPLost++;
+    }
+  if(packetType=="cbr")
+    { 
+      if(event=="+")
+       UDPSent++;
+      else
+      if(event=="r")
+       UDPReceived++;
+      else
+      if(event=="d")
+      UDPLost++;
+    }
+   
+}
+END {
+TotalSent=TCPSent+UDPSent;
+TotalReceived=TCPReceived+UDPReceived;
+TotalLost=TCPLost+UDPlost;
+
+printf ("The total number of packets sent by Tcp is %d",TCPSent);
+printf ("The total number of packets received by Tcp is %d",TCPReceived);
+printf ("The total number of packets sent by Udp is %d",UDPSent);
+printf ("The total number of packets received by Udp is %d",UDPReceived);
+printf ("The total number of packets sent is %d",TotalSent);
+printf ("The total number of packets received is %d",TCPReceived);
+   }

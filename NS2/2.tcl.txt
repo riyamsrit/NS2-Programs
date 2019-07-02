@@ -1,0 +1,58 @@
+set ns [new Simulator]
+
+set nf [open 2.nam w]
+$ns namtrace-all $nf
+
+set tf [open 2.tr w]
+$ns trace-all $tf
+
+proc finish {} {
+global ns nf tf
+$ns flush-trace
+close $nf
+close $tf
+exec awk-f stats.awk 2.tr &
+exit 0
+}
+
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+
+$ns duplex-link $n0 $n2 1Mb 10 ms DropTail
+$ns duplex-link $n1 $n2 1Mb 10 ms DropTail
+$ns duplex-link $n2 $n3 100kb 10 ms DropTail
+
+$ns queue-limit $n0 $n2 10
+
+set tcp0 [new Agent/TCP]
+$ns attach-agent $n0 $tcp0
+
+set sink1 [new Agent/TCPSink]
+$ns attach-agent $n3 $sink1
+$ns connect $tcp0 $sink1
+
+set telnet [new Application/TELNET]
+$telnet attach-agent $tcp0
+$telnet set interval_0
+
+set tcp1 [new Agent/TCP]
+$ns attach-agent $n1 $tcp1
+
+set sink2 [new Agent/TCPSink]
+$ns attach-agent $n3 $sink2
+$ns connect $tcp1 $sink2
+
+set ftp [new Application/FTP]
+$ftp set type_FTP
+$ftp attach-agent $tcp1
+
+$ns at 0.1 "$telnet start"
+$ns at 0.5 "$ftp start"
+$ns at 24.5 "$telnet stop"
+$ns at 24.5 "$ftp stop"
+$ns at 25.0 "finish"
+
+$ns run
+

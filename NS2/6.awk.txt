@@ -1,0 +1,30 @@
+BEGIN {
+FTPpackets=0;
+FTPSize=0;
+CBRpackets=0;
+CBRSize=0;
+}
+{
+event=$1;
+pckttype=$5;
+pcktsize=$6;
+if(event=="r"&& pckttype=="tcp")
+{
+FTPpackets++;
+FTPSize=pktsize;
+}
+if(event=="r"&& pckttype=="cbr")
+{
+CBRpackets++;
+CBRSize=pktsize;
+}
+}
+
+END {
+TotalFTP=FTPpackets*FTPSize;
+Totalcbr=CBRpackets*CBRSize;
+printf("The throughput of FTP application is %d bytes per second",TotalFTP/123.0);
+printf("The throughput of CBR application is %d bytes per second",TotalCBR/124.0);
+}
+
+
